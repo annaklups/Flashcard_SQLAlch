@@ -10,7 +10,14 @@ from flashcard_functions import add_flashcard, input_new_user, login_in
 from gen_functions import directory_path, repeat_function
 from inner_menu import inner_menu_func
 
+import flashcard_models
+from database import engine
+
+
 def main():
+    # Create new file with tables:
+    flashcard_models.Base.metadata.create_all(engine)
+
     # Creating basic tables
     conn = sqlite3.connect(directory_path("flashcards_db.db"))
     c = conn.cursor()

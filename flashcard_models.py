@@ -1,9 +1,6 @@
-# Models
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy import String, Integer, Text
-
-class Base(DeclarativeBase):
-    pass
+from database import Base
 
 class User(Base):
     __tablename__ = 'users_tab'
@@ -19,23 +16,26 @@ class User(Base):
         return f"User {self.user_num} login {self.login}"
 
 
-# Engine
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-# sessionmaker - czy napewno potrzebne? sprawdzić
+# models.py:
+# from sqlalchemy.sql.sqltypes import Integer, String, Boolean
+# from sqlalchemy.sql.schema import ForeignKey
+# from sqlalchemy.orm import relationship
+# from db.database import Base
+# from sqlalchemy import Column
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./flashcard_sqlalch.db"
-engine = create_engine(SQLALCHEMY_DATABASE_URL, echo=True)
+# class DbUser(Base):
+#     __tablename__ = 'users'
+#     id = Column(Integer, primary_key=True, index=True)
+#     username = Column(String)
+#     email = Column(String)
+#     password = Column(String)
+#     items = relationship('DbArticle', back_populates = 'user')
 
-SessionLocal = sessionmaker(autocommit = False, autoflush= False, bind = engine)
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close() 
-# Create database
-Base.metadata.create_all(engine)
-
-
+# class DbArticle(Base):
+#     __tablename__='articles'
+#     id = Column(Integer, primary_key=True, index=True)
+#     title = Column(String)
+#     content = Column(String)
+#     published = Column(Boolean)
+#     user_id = Column(Integer, ForeignKey('users.id'))
+#     user = relationship("DbUser", back_populates ='items')
