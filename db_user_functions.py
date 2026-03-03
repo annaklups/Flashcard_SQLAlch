@@ -3,28 +3,57 @@ from flashcard_models import User
 
 def create_user(newu_login, newu_password, newu_flash_amount, newu_new_flash_amount):
     db = SessionLocal()
-    user = User(
-        login=newu_login, 
-        password=newu_password, 
-        flash_amount=newu_flash_amount, 
-        new_flash_amount=newu_new_flash_amount)
-    db.add(user)
+    try:
+        user = User(
+            login=newu_login, 
+            password=newu_password, 
+            flash_amount=newu_flash_amount, 
+            new_flash_amount=newu_new_flash_amount)
+        db.add(user)
+        db.commit()        
+    except:
+        print(f"User with {newu_login} exist in database already")
+    finally:
+        db.close()
+
+def get_all_users():
+    db = SessionLocal()
+    users = db.query(User).all()
+    print(users)
+
+def get_user(log_login):
+    db = SessionLocal()
+    user = db.query(User).filter(User.login == log_login).first()
+    print(user)
+    return user
+
+def change_settings(log_login, cs_flash_amount, cs_new_flash_amount):
+    db = SessionLocal()
+    user = db.query(User).filter(User.login == log_login)
+    user.update({
+        User.flash_amount: cs_flash_amount,
+        User.new_flash_amount: cs_new_flash_amount
+    })
     db.commit()
     db.close()
 
-def change_settings():
-    pass
+def delete_user(log_login):
+    db = SessionLocal()
+    user = db.query(User).filter(User.login == log_login).first()
+    db.delete(user)
+    db.commit()
+    db.close()
 
-def delete_user():
-    pass
+def change_password(log_login, new_password1):
+    db = SessionLocal()
+    user = db.query(User).filter(User.login == log_login)
+    user.update({User.password: new_password1})
+    db.commit()
+    db.close()
 
-def change_password():
-    pass
+create_user('aniaa34','passssss', 9, 3)
+# get_all_users()
 
-# czy change settings i change password muszą być osobno?
-
-
-
-
-
-create_user('annak','blabla', 5, 4)
+# get_user('annak')
+# change_settings('annak', 10, 2)
+# delete_user('annak')
