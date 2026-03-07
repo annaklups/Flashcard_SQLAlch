@@ -10,6 +10,8 @@ def create_flashcard(newf_pol, newf_translate, newf_topic):
             topic = newf_topic
         )
         db.add(flashcard)
+        flash_number = db.query(Flashcard).filter(Flashcard.pol == newf_pol).first()
+        
         db.commit()        
     except:
         print(f"Flashcard with {newf_pol} word exist in database already")
@@ -21,11 +23,13 @@ def get_all_flashcards():
     flashcards = db.query(Flashcard).all()
     print(flashcards)
 
+def get_flashcard(flashcard_number):
+    db = SessionLocal()
+    flashcard = db.query(Flashcard).filter(Flashcard.flash_num == flashcard_number).first()
+    print(flashcard)
+    return flashcard
 
-def add_flashcard():
-    """Collecting inputs, creating and adding new flashcard to database"""
-    newf_topic = input("What topic this flashcard refers to?: ")
-    newf_pol = input("Provide polish verion of this word or sentence: ")
-    newf_translate = input("Provide translation of this word or sentence: ")
-    f = Flashcard(newf_pol.lower(), newf_translate.lower(), newf_topic.lower())
-    f.add_1_flashcard_to_db()
+
+# create_flashcard('żółty','yellow','colours')
+# get_all_flashcards()
+# get_flashcard(1)

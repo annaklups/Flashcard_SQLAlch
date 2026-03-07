@@ -10,6 +10,8 @@ c.execute("SELECT name FROM sqlite_master WHERE type='table';")
 print(c.fetchall())
 c.execute("SELECT * FROM users_tab;")
 print(c.fetchall())
+c.execute("SELECT * FROM flashcards_tab;")
+print(c.fetchall())
 
 conn.commit()
 conn.close()

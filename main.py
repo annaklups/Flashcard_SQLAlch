@@ -12,23 +12,20 @@ from inner_menu import inner_menu_func
 
 import flashcard_models
 from database import engine
-
+from db_flashcard_functions import create_flashcard
 
 def main():
     # Create new file with tables:
     flashcard_models.Base.metadata.create_all(engine)
 
     # Creating basic tables
-    conn = sqlite3.connect(directory_path("flashcards_db.db"))
+    conn = sqlite3.connect(directory_path("flashcards_db_alchemy.db"))
     c = conn.cursor()
-    c.execute("CREATE TABLE IF NOT EXISTS users_tab (user_num INTEGER PRIMARY KEY, login TEXT, password TEXT, flash_amount INT, new_flash_amount INT);")
-    c.execute("CREATE TABLE IF NOT EXISTS users_info_tab (user_num INTEGER PRIMARY KEY, wages TEXT);")
-    c.execute("CREATE TABLE IF NOT EXISTS flashcards_tab (flash_num INTEGER PRIMARY KEY, pol TEXT, translate TEXT, topic TEXT);")
 
     # For developing phase only:
     # c.execute("DELETE FROM flashcards_tab")
     # c.execute("DELETE FROM users_tab")
-    # c.execute("DELETE FROM users_info_tab")
+    # c.execute("DELETE FROM wages_tab")
 
     conn.commit()
     conn.close()
@@ -38,18 +35,17 @@ def main():
         csv_reader = reader(file)
         flashcards_source = list(csv_reader)
     
-        for line in flashcards_source:            
-            f = Flashcard(line[0], line[1], line[2])
-            f.add_1_flashcard_to_db()
+        for line in flashcards_source:
+            create_flashcard(line[0], line[1], line[2])
 
     # For developing phase only:
-    conn = sqlite3.connect(directory_path("flashcards_db.db"))
+    conn = sqlite3.connect(directory_path("flashcards_db_alchemy.db"))
     c = conn.cursor()
     c.execute("SELECT * FROM flashcards_tab;")
     print(c.fetchall())
     c.execute("SELECT * FROM users_tab;")
     print(c.fetchall())    
-    c.execute("SELECT * FROM users_info_tab;")
+    c.execute("SELECT * FROM wages_tab;")
     print(c.fetchall())
     conn.commit()
     conn.close()
