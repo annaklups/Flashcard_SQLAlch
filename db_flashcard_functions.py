@@ -1,5 +1,5 @@
 from database import SessionLocal
-from flashcard_models import Flashcard
+from flashcard_models import Flashcard, User, Wage
 
 def create_flashcard(newf_pol, newf_translate, newf_topic):
     db = SessionLocal()
@@ -10,8 +10,15 @@ def create_flashcard(newf_pol, newf_translate, newf_topic):
             topic = newf_topic
         )
         db.add(flashcard)
-        flash_number = db.query(Flashcard).filter(Flashcard.pol == newf_pol).first()
-        
+        db.commit()
+        flashcard = db.query(Flashcard).filter(Flashcard.pol == newf_pol).first()
+        users = db.query(User).all()
+        for user in users:
+            wage = Wage(
+                user_num = user.user_num,
+                flash_num = flashcard.flash_num,
+                score=5)
+            db.add(wage)            
         db.commit()        
     except:
         print(f"Flashcard with {newf_pol} word exist in database already")
@@ -30,6 +37,6 @@ def get_flashcard(flashcard_number):
     return flashcard
 
 
-# create_flashcard('żółty','yellow','colours')
+create_flashcard('szafa','drawer','everyday objects')
 # get_all_flashcards()
 # get_flashcard(1)

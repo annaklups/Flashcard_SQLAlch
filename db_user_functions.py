@@ -1,5 +1,5 @@
 from database import SessionLocal
-from flashcard_models import User
+from flashcard_models import User, Flashcard, Wage
 
 def create_user(newu_login, newu_password, newu_flash_amount, newu_new_flash_amount):
     db = SessionLocal()
@@ -10,6 +10,15 @@ def create_user(newu_login, newu_password, newu_flash_amount, newu_new_flash_amo
             flash_amount=newu_flash_amount, 
             new_flash_amount=newu_new_flash_amount)
         db.add(user)
+        db.commit() 
+        user = db.query(User).filter(User.login == newu_login).first()
+        flashcards = db.query(Flashcard).all()
+        for flash in flashcards:
+            wage = Wage(
+                user_num = user.user_num,
+                flash_num = flash.flash_num,
+                score=5)
+            db.add(wage)
         db.commit()        
     except:
         print(f"User with {newu_login} exist in database already")
@@ -51,9 +60,9 @@ def change_password(log_login, new_password1):
     db.commit()
     db.close()
 
-create_user('aniaa34','passssss', 9, 3)
+create_user('ania1','pass', 9, 3)
 # get_all_users()
 
 # get_user('annak')
 # change_settings('annak', 10, 2)
-# delete_user('annak')
+# delete_user('aniaa3456')

@@ -12,6 +12,8 @@ c.execute("SELECT * FROM users_tab;")
 print(c.fetchall())
 c.execute("SELECT * FROM flashcards_tab;")
 print(c.fetchall())
+c.execute("SELECT * FROM wages_tab;")
+print(c.fetchall())
 
 conn.commit()
 conn.close()
