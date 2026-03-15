@@ -19,7 +19,8 @@ def create_flashcard(newf_pol, newf_translate, newf_topic):
                 flash_num = flashcard.flash_num,
                 score=5)
             db.add(wage)            
-        db.commit()        
+        db.commit()
+        print(f"Flashcard {flashcard.flash_num}: {flashcard.pol} added to database")        
     except:
         print(f"Flashcard with {newf_pol} word exist in database already")
     finally:

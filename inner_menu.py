@@ -1,7 +1,8 @@
 from gen_classes import ChoiceInner
 from gen_functions import repeat_function
-from flashcard_classes import User
 from flashcard_functions import input_new_user, learning
+
+from db_user_functions import change_settings, change_password, delete_user
 
 
 def inner_menu_func(login_data):
@@ -27,8 +28,7 @@ def inner_menu_func(login_data):
                 print('Please, provide correct number of new flashcards')           
                 cs_new_flash_amount = False
 
-        cs = User(login_data['login'], "dummy_password", cs_flash_amount, cs_new_flash_amount, login_data['user_num'])
-        cs.change_settings()
+        change_settings(login_data['login'], cs_flash_amount, cs_new_flash_amount)
         return False
     
     # 2. change password
@@ -47,8 +47,7 @@ def inner_menu_func(login_data):
                 )
         
         if new_password1 == new_password2:
-            cp = User(login_data['login'], new_password1, login_data['flash_amount'], login_data['new_flash_amount'], login_data['user_num'])
-            cp.change_password()
+            change_password(login_data['login'], new_password1)
         else:
             print("New passwords are not identical!")
         return False
@@ -59,8 +58,7 @@ def inner_menu_func(login_data):
         while confirmation not in ('yes', 'YES', 'Yes', 'y', 'Y', 'no', 'NO', 'No', 'n', 'N'):
             confirmation = input(f"Are you sure you want to delete {login_data['login']}? (Y/N) ")
             if confirmation in ('yes', 'YES', 'Yes', 'y', 'Y'):
-                dlt = User(login_data['login'], "dummy_password", login_data['flash_amount'], login_data['new_flash_amount'], login_data['user_num'])
-                dlt.delete_user()   
+                delete_user(login_data['login'])
                 return True
             elif confirmation in ('no', 'NO', 'No', 'n', 'N'):
                 return False

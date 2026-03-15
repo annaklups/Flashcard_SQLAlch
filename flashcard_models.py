@@ -33,6 +33,6 @@ class Wage(Base):
 
     user_num: Mapped[int] = mapped_column(ForeignKey("users_tab.user_num"), primary_key=True)
     flash_num: Mapped[int] = mapped_column(ForeignKey("flashcards_tab.flash_num"), primary_key=True)
-    score: Mapped[int] = mapped_column(Integer, default=0)
+    score: Mapped[int] = mapped_column(Integer, default=5)
     scores_user: Mapped["User"] = relationship(back_populates='wages_user')
     scores_flash: Mapped["Flashcard"] = relationship(back_populates='wages_flash')

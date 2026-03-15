@@ -4,7 +4,6 @@
 import sqlite3
 from csv import reader
 
-from flashcard_classes import User, Flashcard
 from gen_classes import Choice
 from flashcard_functions import add_flashcard, input_new_user, login_in
 from gen_functions import directory_path, repeat_function
@@ -13,22 +12,23 @@ from inner_menu import inner_menu_func
 import flashcard_models
 from database import engine
 from db_flashcard_functions import create_flashcard
+from db_user_functions import create_user
 
 def main():
     # Create new file with tables:
     flashcard_models.Base.metadata.create_all(engine)
 
     # Creating basic tables
-    conn = sqlite3.connect(directory_path("flashcards_db_alchemy.db"))
-    c = conn.cursor()
+    # conn = sqlite3.connect(directory_path("flashcards_db_alchemy.db"))
+    # c = conn.cursor()
 
     # For developing phase only:
     # c.execute("DELETE FROM flashcards_tab")
     # c.execute("DELETE FROM users_tab")
     # c.execute("DELETE FROM wages_tab")
 
-    conn.commit()
-    conn.close()
+    # conn.commit()
+    # conn.close()
 
     # Adding basic pack of flashcards to database
     with open(directory_path("flashcards_csv.csv"), encoding='utf-8') as file:
@@ -84,8 +84,7 @@ def main():
                     print('Please, provide correct number of new flashcards')           
                     newu_new_flash_amount = False
 
-            nu = User(newu_login, newu_password, newu_flash_amount, newu_new_flash_amount)
-            nu.create_user()
+            create_user(newu_login, newu_password, newu_flash_amount, newu_new_flash_amount)
 
     # 2. login in
         elif user_choice == Choice.login_in_to_program:
@@ -119,7 +118,6 @@ if __name__ == "__main__":
     main()
 
 # To do:
-#- przejść na sqlalchemy w zakresie używania db
 #- dodać możliwość przeglądania statystyk dla każdego usera:
 #       -dodatkowa tabela z datą i listą poprawnych/niepoprawnych odpowiedzi: data, login, fiszka, poprawne/niepoprawne
 #       -możliwość podsumowania: ilość poprawnych/ niepoprawnych odpowiedzi, najczęściej/najrzadziej trenowana fiszka, ilość dni treningu
