@@ -1,7 +1,5 @@
 import sqlite3
-from flashcard_functions import directory_path
-from database import SessionLocal
-from flashcard_models import User
+from gen_functions import directory_path
 
 conn = sqlite3.connect(directory_path("flashcards_db_alchemy.db"))
 c = conn.cursor()

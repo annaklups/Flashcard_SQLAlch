@@ -1,14 +1,9 @@
-import sqlite3
 from random import choices
 import re
 
-from flashcard_classes import Flashcard
-from gen_functions import directory_path
-
-from db_flashcard_functions import create_flashcard, get_flashcard
 from db_user_functions import login
-from db_wage_functions import get_wages_for_draw
-
+from db_flashcard_functions import create_flashcard, get_flashcard
+from db_wage_functions import get_wages_for_draw, update_wages
 
 def input_new_user(text, regexp):
     """Colleting input data for new user or for changing settings/ password. Checking correctness of inputs from user"""
@@ -33,7 +28,7 @@ def login_in():
     else:
         print("You login data is incorrect")
         logged_flag = False
-        return {'logged_flag': logged_flag} 
+        return {'logged_flag': logged_flag}
 
 def add_flashcard():
     """Collecting inputs, creating and adding new flashcard to database"""
@@ -42,21 +37,21 @@ def add_flashcard():
     newf_translate = input("Provide translation of this word or sentence: ")
     create_flashcard(newf_pol.lower(), newf_translate.lower(), newf_topic.lower())
 
-def learning_part(login_data, repetitions, flag_new):                
-    """Learning flashards (as many as previously declared in users data). Updating wages based on users answers"""
-    for i in range(repetitions):
-        flash_drawn = draw_flashcard(login_data['user_num'], flag_new)
-        fd = Flashcard(flash_drawn['pol'], flash_drawn['translate'], flash_drawn['topic'], flash_drawn['flash_num'])
-        wage_change = fd.learn_flashcard()
-        print(flash_drawn['wages'], flash_drawn['flash_num'], wage_change)
-        update_wages(login_data['user_num'], flash_drawn['wages'], flash_drawn['flash_num'], wage_change)
-    
 def learning(login_data):
+    """Learning module - first old flashcards then new flashcards"""
     learning_part(login_data, login_data['flash_amount'] - login_data['new_flash_amount'], False)
     learning_part(login_data, login_data['new_flash_amount'], True)
 
+def learning_part(login_data, repetitions, flag_new):
+    """One part of learning flashards (as many as previously declared in users data). New or old ones.
+    Updating wages based on users answers"""
+    for i in range(repetitions):
+        flash_drawn = draw_flashcard(login_data['user_num'], flag_new)
+        wage_change = learn_flashcard(flash_drawn)
+        update_wages(login_data['user_num'], flash_drawn.flash_num, wage_change)
+
 def draw_flashcard(user_num, flag_new):
-    """Drawing one flashcard from database"""
+    """Drawing one flashcard from database based on user wages"""
     wages_all = get_wages_for_draw(user_num)
     # filter for old/new flashcards and reorder them -> [(flashcards_num), (wages)]
     wages_old = list(zip(*[pair for pair in wages_all if pair[1]!=5]))
@@ -67,18 +62,16 @@ def draw_flashcard(user_num, flag_new):
     else:
         draw = choices(wages_new[0], k=1)     
     flash = get_flashcard(*draw)
-    return {'pol': flash.pol, 'translate': flash.translate, 'topic': flash.topic, 'flash_num': flash.flash_num}
+    return flash
+    # return {'pol': flash.pol, 'translate': flash.translate, 'topic': flash.topic, 'flash_num': flash.flash_num}
 
-def update_wages(user_num, wages, flash_num, change):
-    """Updating user's wages in database based on his answer"""
-    if wages[flash_num] == 1 and change == -1:
-        pass
+def learn_flashcard(flash_drawn):                
+    """Learning flashard drawn previously from db. Returning wage update for the flashcard"""
+    print(f"Flashcard number:{flash_drawn.flash_num} - POL: {flash_drawn.pol.upper()}")
+    answer = input("Please provide translation:")
+    if answer.lower() == flash_drawn.translate:
+        print("Correct answer!!")
+        return -1
     else:
-        wages[flash_num] = wages[flash_num] + change
-        conn = sqlite3.connect(directory_path("flashcards_db.db"))
-        c = conn.cursor()
-        c.execute("UPDATE users_info_tab SET wages = ? WHERE user_num = ?;", (str(wages), user_num))        
-        conn.commit()
-        conn.close()
-
-draw_flashcard(1, False)
+        print(f"You have to work on that. Correct answer is: {flash_drawn.translate}")
+        return 1

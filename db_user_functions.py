@@ -1,5 +1,6 @@
 from database import SessionLocal
 from flashcard_models import User, Flashcard, Wage
+from sqlalchemy import select, update
 
 def create_user(newu_login, newu_password, newu_flash_amount, newu_new_flash_amount):
     db = SessionLocal()
@@ -11,13 +12,13 @@ def create_user(newu_login, newu_password, newu_flash_amount, newu_new_flash_amo
             new_flash_amount=newu_new_flash_amount)
         db.add(user)
         db.commit() 
-        user = db.query(User).filter(User.login == newu_login).first()
-        flashcards = db.query(Flashcard).all()
+        user = db.scalars(select(User).filter_by(login = newu_login)).first()
+        flashcards = db.scalars(select(Flashcard)).all()
         for flash in flashcards:
             wage = Wage(
                 user_num = user.user_num,
                 flash_num = flash.flash_num,
-                score=5)
+                score = 5)
             db.add(wage)
         db.commit()
         print(f"User {newu_login} added to db")        
@@ -28,55 +29,53 @@ def create_user(newu_login, newu_password, newu_flash_amount, newu_new_flash_amo
 
 def get_all_users():
     db = SessionLocal()
-    users = db.query(User).all()
+    users = db.scalars(select(User)).all()
     print(users)
 
 def get_user(log_login):
     db = SessionLocal()
-    user = db.query(User).filter(User.login == log_login).first()
+    user = db.scalars(select(User).filter_by(login = log_login)).first()
     return user
 
-def login(log_login, password):
+def login(log_login, log_password):
     db = SessionLocal()
-    user = db.query(User).filter(User.login == log_login, User.password == password).first()
-    return user    
+    user = db.scalars(select(User).filter_by(login = log_login, password = log_password)).first()
+    return user
 
 def change_settings(log_login, cs_flash_amount, cs_new_flash_amount):
     try:
         db = SessionLocal()
-        user = db.query(User).filter(User.login == log_login)
-        user.update({
-            User.flash_amount: cs_flash_amount,
-            User.new_flash_amount: cs_new_flash_amount
-        })
+        db.execute(update(User).where(User.login == log_login).values(
+            flash_amount=cs_flash_amount, 
+            new_flash_amount=cs_new_flash_amount
+            ))
         db.commit()
         print("Settings changed correctly")
     except:
-        print("Error occured")
+        print("Error occured during changing settings")
     finally:
         db.close()
 
 def delete_user(log_login):
     try:
         db = SessionLocal()
-        user = db.query(User).filter(User.login == log_login).first()
+        user = db.scalars(select(User).filter_by(login = log_login)).first()
         db.delete(user)
         db.commit()
         print(f"User {log_login} delete from database")
     except:
-        print("Error occured")
+        print("Error occured during deleting user process")
     finally:
         db.close()
 
 def change_password(log_login, new_password1):
     try:
         db = SessionLocal()
-        user = db.query(User).filter(User.login == log_login)
-        user.update({User.password: new_password1})
+        db.execute(update(User).where(User.login == log_login).values(password=new_password1))
         db.commit()
         print("Password changed correctly")
     except:
-        print("Error occured")
+        print("Error occured during changing password")
     finally:
         db.close()
 
@@ -85,6 +84,7 @@ def change_password(log_login, new_password1):
 # get_all_users()
 # get_user('AniaK')
 # get_user("buba")
-login('AniaK', 'Qwerty2')
-# change_settings('annak', 10, 2)
+# login('AniaK', 'Qwerty1')
+# change_settings('ania1', 8, 3)
+# change_password('AniaK', 'Qwerty1')
 # delete_user('aniaa3456')
