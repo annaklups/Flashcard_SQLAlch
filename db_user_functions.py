@@ -3,6 +3,7 @@ from flashcard_models import User, Flashcard, Wage
 from sqlalchemy import select, update
 
 def create_user(newu_login, newu_password, newu_flash_amount, newu_new_flash_amount):
+    """Creating user and adding user to db. Adding base wages to db for this user"""
     db = SessionLocal()
     try:
         user = User(
@@ -28,21 +29,25 @@ def create_user(newu_login, newu_password, newu_flash_amount, newu_new_flash_amo
         db.close()
 
 def get_all_users():
+    """Getting all users data from db and printing it"""
     db = SessionLocal()
     users = db.scalars(select(User)).all()
     print(users)
 
 def get_user(log_login):
+    """Getting one user from based ont its login"""
     db = SessionLocal()
     user = db.scalars(select(User).filter_by(login = log_login)).first()
     return user
 
 def login(log_login, log_password):
+    """Login function, returning user data if provided login and password are correct."""
     db = SessionLocal()
     user = db.scalars(select(User).filter_by(login = log_login, password = log_password)).first()
     return user
 
 def change_settings(log_login, cs_flash_amount, cs_new_flash_amount):
+    """Changing number of new and old flashcard to provided values for selected user"""
     try:
         db = SessionLocal()
         db.execute(update(User).where(User.login == log_login).values(
@@ -57,6 +62,7 @@ def change_settings(log_login, cs_flash_amount, cs_new_flash_amount):
         db.close()
 
 def delete_user(log_login):
+    """Deleting user and all its data from db"""
     try:
         db = SessionLocal()
         user = db.scalars(select(User).filter_by(login = log_login)).first()
@@ -69,6 +75,7 @@ def delete_user(log_login):
         db.close()
 
 def change_password(log_login, new_password1):
+    """Changing password to new one for provided user."""
     try:
         db = SessionLocal()
         db.execute(update(User).where(User.login == log_login).values(password=new_password1))

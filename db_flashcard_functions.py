@@ -3,7 +3,7 @@ from flashcard_models import Flashcard, User, Wage
 from sqlalchemy import select
 
 def create_flashcard(newf_pol, newf_translate, newf_topic):
-    """Creating new flashcard. Updating wage tabel with new flashcard"""
+    """Creating new flashcard. Updating wage tabel with new flashcard number"""
     db = SessionLocal()
     try:
         flashcard = Flashcard(

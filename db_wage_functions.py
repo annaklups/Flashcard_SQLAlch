@@ -3,6 +3,7 @@ from flashcard_models import Wage
 from sqlalchemy import select, update
 
 def get_wages_for_draw(user_number):
+    """Getting wages from db for selected user. Returning list of wages."""
     db = SessionLocal()
     wages = db.scalars(select(Wage).filter_by(user_num = user_number))
     wage_list = []
@@ -12,6 +13,7 @@ def get_wages_for_draw(user_number):
     return wage_list
 
 def update_wages(user_number, flash_number, wage_change):
+    """Updating wage for selected user and flashcard with provided wage change"""
     try:
         db = SessionLocal()
         wage_to_update = db.scalars(select(Wage).filter_by(user_num = user_number, flash_num = flash_number)).first()

@@ -6,7 +6,8 @@ from db_user_functions import change_settings, change_password, delete_user
 
 
 def inner_menu_func(login_data):
-    """Inner menu function - allows to choose from changing settings, changing password, deleting user, learning or goin back to main menu"""
+    """Inner menu function - allows to choose from changing settings, 
+    changing password, deleting user, learning or goin back to main menu"""
     user_choice = int(input(
         "What do you wish to do now? (type number):  \n " \
         "1 - change settings for existing user \n " \
@@ -19,11 +20,15 @@ def inner_menu_func(login_data):
     if user_choice == ChoiceInner.change_settings:
         cs_flash_amount = False
         while cs_flash_amount == False:
-            cs_flash_amount = input_new_user("How many flashcard do you want to train per session?: ", r'^[0-9]+$')
+            cs_flash_amount = input_new_user(
+                "How many flashcard do you want to train per session?: ", 
+                r'^[0-9]+$')
         
         cs_new_flash_amount = False
         while cs_new_flash_amount == False:    
-            cs_new_flash_amount = input_new_user("How many of them you want to be completely new?: ", r'^[0-9]+$')
+            cs_new_flash_amount = input_new_user(
+                "How many of them you want to be completely new?: ", 
+                r'^[0-9]+$')
             if (cs_new_flash_amount == False) or (cs_new_flash_amount > cs_flash_amount):
                 print('Please, provide correct number of new flashcards')           
                 cs_new_flash_amount = False
@@ -72,7 +77,6 @@ def inner_menu_func(login_data):
     elif user_choice == ChoiceInner.main_menu:
         return True
     
-    # 99. testing mode
-    elif user_choice == 99:
-        repeat_function(learning, 'Do you?', login_data, login_data['new_flash_amount'], True)
-        return False        
+    # Else
+    else:
+        return False

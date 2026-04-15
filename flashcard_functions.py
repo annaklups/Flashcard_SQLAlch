@@ -6,7 +6,8 @@ from db_flashcard_functions import create_flashcard, get_flashcard
 from db_wage_functions import get_wages_for_draw, update_wages
 
 def input_new_user(text, regexp):
-    """Colleting input data for new user or for changing settings/ password. Checking correctness of inputs from user"""
+    """Colleting input data for new user or for changing settings/ password. 
+    Checking correctness of inputs from user with regexp"""
     newu = input(text)
     pattern = re.compile(regexp)
     res = pattern.search(newu)
@@ -24,7 +25,12 @@ def login_in():
     if user:
         print(f"{your_login} logged in !")
         logged_flag = True
-        return {'logged_flag': logged_flag, 'user_num': user.user_num, 'login': user.login, 'flash_amount': user.flash_amount, 'new_flash_amount': user.new_flash_amount}
+        return {'logged_flag': logged_flag, 
+                'user_num': user.user_num, 
+                'login': user.login, 
+                'flash_amount': user.flash_amount, 
+                'new_flash_amount': user.new_flash_amount
+                }
     else:
         print("You login data is incorrect")
         logged_flag = False
@@ -43,8 +49,8 @@ def learning(login_data):
     learning_part(login_data, login_data['new_flash_amount'], True)
 
 def learning_part(login_data, repetitions, flag_new):
-    """One part of learning flashards (as many as previously declared in users data). New or old ones.
-    Updating wages based on users answers"""
+    """One part of learning flashards (as many as previously declared in users data). 
+    New or old ones. Updating wages based on users answers"""
     for i in range(repetitions):
         flash_drawn = draw_flashcard(login_data['user_num'], flag_new)
         wage_change = learn_flashcard(flash_drawn)
