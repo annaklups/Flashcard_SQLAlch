@@ -1,8 +1,7 @@
 from gen_classes import ChoiceInner
 from gen_functions import repeat_function
 from flashcard_functions import input_new_user, learning
-
-from db_user_functions import change_settings, change_password, delete_user
+from db.db_user_functions import change_settings, change_password, delete_user
 
 
 def inner_menu_func(login_data):

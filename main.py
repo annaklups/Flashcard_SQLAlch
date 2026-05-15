@@ -8,14 +8,14 @@ from flashcard_functions import add_flashcard, input_new_user, login_in
 from gen_functions import directory_path, repeat_function
 from inner_menu import inner_menu_func
 
-import flashcard_models
-from database import engine
-from db_flashcard_functions import create_flashcard
-from db_user_functions import create_user
+import db.models as models
+from db.database import engine
+from db.db_flashcard_functions import create_flashcard
+from db.db_user_functions import create_user
 
 def main():
     # Create new file with tables:
-    flashcard_models.Base.metadata.create_all(engine)
+    models.Base.metadata.create_all(engine)
 
     # Adding starting pack of flashcards to database:
     with open(directory_path("flashcards_csv.csv"), encoding='utf-8') as file:

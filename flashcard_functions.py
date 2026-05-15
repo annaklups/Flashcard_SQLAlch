@@ -1,9 +1,9 @@
 from random import choices
 import re
 
-from db_user_functions import login
-from db_flashcard_functions import create_flashcard, get_flashcard
-from db_wage_functions import get_wages_for_draw, update_wages
+from db.db_user_functions import login
+from db.db_flashcard_functions import create_flashcard, get_flashcard
+from db.db_wage_functions import get_wages_for_draw, update_wages
 
 def input_new_user(text, regexp):
     """Colleting input data for new user or for changing settings/ password. 

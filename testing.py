@@ -1,4 +1,5 @@
 import sqlite3
+
 from gen_functions import directory_path
 
 conn = sqlite3.connect(directory_path("flashcards_db_alchemy.db"))

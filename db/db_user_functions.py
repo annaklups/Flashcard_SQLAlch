@@ -1,6 +1,7 @@
-from database import SessionLocal
-from flashcard_models import User, Flashcard, Wage
 from sqlalchemy import select, update
+
+from db.database import SessionLocal
+from db.models import User, Flashcard, Wage
 
 def create_user(newu_login, newu_password, newu_flash_amount, newu_new_flash_amount):
     """Creating user and adding user to db. Adding base wages to db for this user"""

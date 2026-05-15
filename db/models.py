@@ -1,7 +1,8 @@
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import String, Integer, ForeignKey
-from database import Base
 from typing import List
+
+from db.database import Base
 
 class User(Base):
     """Creating users_tab table in db"""

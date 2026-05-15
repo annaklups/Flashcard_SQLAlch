@@ -1,6 +1,8 @@
-from database import SessionLocal
-from flashcard_models import Wage
 from sqlalchemy import select, update
+
+from db.database import SessionLocal
+from db.models import Wage
+
 
 def get_wages_for_draw(user_number):
     """Getting wages from db for selected user. Returning list of wages."""

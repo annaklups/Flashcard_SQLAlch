@@ -1,6 +1,7 @@
-from database import SessionLocal
-from flashcard_models import Flashcard, User, Wage
 from sqlalchemy import select
+
+from db.database import SessionLocal
+from db.models import Flashcard, User, Wage
 
 def create_flashcard(newf_pol, newf_translate, newf_topic):
     """Creating new flashcard. Updating wage tabel with new flashcard number"""
