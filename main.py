@@ -46,7 +46,7 @@ def main():
             while newu_password == False:
                 newu_password = input_new_user(
                     "Password (use at least 1 uppercase letter, " \
-                    "1 lowercase letter and 1 digit: )", 
+                    "1 lowercase letter and 1 digit): ", 
                     r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$')
 
             newu_flash_amount = False
